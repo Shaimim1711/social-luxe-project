@@ -5,7 +5,7 @@ Design-first website for Social Luxe and **Luxe Concierge by SL**.
 ## Design
 
 - Warm ivory, ink black and raspberry accent.
-- Anton display headings; Inter Tight body/wordmark; Allura calligraphy.
+- Inter Tight headings, body and wordmark; Allura calligraphy.
 - Responsive desktop/mobile layouts, accessible mobile navigation, native FAQ disclosures, reduced-motion support, scroll reveals and photo hover effects.
 - Dedicated /marketing/ and /concierge/ pages plus /the-house/, /enquire/ and /privacy/.
 

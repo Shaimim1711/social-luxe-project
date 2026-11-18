@@ -27,7 +27,7 @@ def header(active=""):
 
 def footer():
     return '''<footer class="site-footer"><div class="shell">
-      <div class="footer-top"><div><a class="brand" href="/">Social Luxe<span class="brand-period">.</span></a><p class="footer-description">Marketing &amp; private concierge.<br>Australia. Working worldwide.</p></div>
+      <div class="footer-top"><div><a class="brand" href="/">Social Luxe<span class="brand-period">.</span></a><p class="footer-description">Australia. Working worldwide.</p></div>
       <div class="footer-nav">
         <div class="footer-column"><span class="eyebrow">Explore</span><a href="/marketing/">Marketing</a><a href="/concierge/">Luxe Concierge by SL</a><a href="/the-house/">The House</a></div>
         <div class="footer-column"><span class="eyebrow">Get in touch</span><a href="/enquire/">Make an enquiry ↗</a><a href="mailto:hello@socialluxe.com.au">hello@socialluxe.com.au</a></div>
@@ -59,7 +59,6 @@ def archive():
 
 HOME = f'''
 <section class="home-hero shell">
-  <p class="eyebrow with-dot hero-enter">Marketing &amp; private concierge</p>
   <h1 class="display hero-enter"><span>Influencer marketing.</span><span><span class="script hero-script">Private</span> concierge.</span></h1>
   <p class="hero-copy hero-enter">Campaigns for brands and venues.<br>Bookings for private clients.</p>
   <div class="hero-actions hero-enter">{button("For brands & venues", "/marketing/")}{button("For private clients", "/concierge/")}</div>
@@ -170,7 +169,6 @@ def write_page(path, title, description, content, active="", body_class=""):
 <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#f8f5f1">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{description}"><meta property="og:type" content="website">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/assets/fonts/anton.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter-tight.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head>
 <body class="{body_class}">{header(active)}<main id="main">{content}</main>{footer()}</body></html>'''
