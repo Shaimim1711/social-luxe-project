@@ -8,13 +8,13 @@ Design-first website for Social Luxe and **Luxe Concierge by SL**.
 - Inter Tight headings, body and wordmark; Allura calligraphy.
 - Responsive desktop/mobile layouts, accessible mobile navigation, native FAQ disclosures, reduced-motion support, scroll reveals and photo hover effects.
 - Dedicated /marketing/ and /concierge/ pages plus /the-house/, /enquire/ and /privacy/. The former /work/ page redirects to /marketing/.
-- Five floating original Instagram posts form the homepage hero, supported by pointer-responsive hover effects and reduced-motion support.
+- Five original Instagram posts move in a seamless, continuously scrolling homepage reel. Hover slows it down; pointer/touch drag adds momentum, and buttons or keyboard controls select a card. Motion pauses on keyboard focus, open dialogs, hidden tabs, offscreen galleries and the Pause control. Reduced-motion preferences disable autoplay and momentum.
 - Nine documented projects with Instagram photography and official logos, filters, keyboard-accessible carousels and native project dialogs.
 - The Marketing page combines the project catalogue with a venue partner collection featuring Desa Kitsuné, Giselle and Bella.
 
 ## Edit and preview
 
-The site is static and has no npm dependencies or backend. Edit build.py, projects.json, templates/, styles.css, app.js and hover-effects.js; run:
+The site is static and has no npm dependencies or backend. Edit build.py, projects.json, templates/, styles.css, app.js, motion-gallery.js and hover-effects.js; run:
 
     python3 build.py
     python3 -m http.server 4173 --directory public

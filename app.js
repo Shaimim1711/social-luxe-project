@@ -53,44 +53,6 @@
     setMotion();
   }
 
-  const heroGallery = document.querySelector('[data-hero-gallery]');
-  if (heroGallery) {
-    const rail = heroGallery.querySelector('.floating-deck');
-    const cards = [...rail.querySelectorAll('.floating-photo')];
-    const previous = heroGallery.querySelector('.hero-prev');
-    const next = heroGallery.querySelector('.hero-next');
-    const status = heroGallery.querySelector('.hero-rail-status');
-    const mobileGallery = window.matchMedia('(max-width: 1100px)');
-    const activeIndex = () => {
-      const inset = parseFloat(getComputedStyle(rail).paddingLeft) || 0;
-      return cards.reduce((closest, card, index) =>
-        Math.abs(card.offsetLeft - inset - rail.scrollLeft) < Math.abs(cards[closest].offsetLeft - inset - rail.scrollLeft) ? index : closest, 0);
-    };
-    const updateHero = () => {
-      previous.disabled = rail.scrollLeft < 5;
-      next.disabled = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 5;
-      status.textContent = String(activeIndex() + 1).padStart(2, '0') + ' / 05';
-      rail.tabIndex = mobileGallery.matches ? 0 : -1;
-    };
-    const moveHero = direction => {
-      const index = Math.max(0, Math.min(cards.length - 1, activeIndex() + direction));
-      const inset = parseFloat(getComputedStyle(rail).paddingLeft) || 0;
-      rail.scrollTo({ left: cards[index].offsetLeft - inset, behavior: reducedMotion.matches || document.body.classList.contains('motion-paused') ? 'instant' : 'smooth' });
-    };
-    previous.addEventListener('click', () => moveHero(-1));
-    next.addEventListener('click', () => moveHero(1));
-    rail.addEventListener('scroll', updateHero, { passive: true });
-    rail.addEventListener('keydown', event => {
-      if (event.target !== rail || !mobileGallery.matches) return;
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-        event.preventDefault();
-        moveHero(event.key === 'ArrowRight' ? 1 : -1);
-      }
-    });
-    new ResizeObserver(updateHero).observe(rail);
-    updateHero();
-  }
-
   document.querySelectorAll('[data-gallery]').forEach(gallery => {
     const rail = gallery.querySelector('.project-rail');
     const prev = gallery.querySelector('.gallery-prev');
@@ -162,10 +124,16 @@
       document.body.classList.add('dialog-open');
       projectDialog.querySelector('.dialog-close').focus({ preventScroll: true });
     };
-    document.querySelectorAll('[data-project]').forEach(link => link.addEventListener('click', event => {
-      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-      event.preventDefault(); openProject(link.dataset.project, link);
-    }));
+    document.addEventListener('click', event => {
+      const link = event.target.closest('[data-project]');
+      if (!link || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      // Visual loop copies open the same case, then restore focus to its accessible original.
+      const trigger = link.closest('[data-gallery-copy]')
+        ? document.querySelector('[data-original] [data-project="' + link.dataset.project + '"]') || link
+        : link;
+      event.preventDefault();
+      openProject(link.dataset.project, trigger);
+    });
     document.getElementById('photo-prev').addEventListener('click', () => { photoIndex = (photoIndex - 1 + currentProject.photos.length) % currentProject.photos.length; showPhoto(); });
     document.getElementById('photo-next').addEventListener('click', () => { photoIndex = (photoIndex + 1) % currentProject.photos.length; showPhoto(); });
     projectDialog.querySelector('.dialog-close').addEventListener('click', () => projectDialog.close());
