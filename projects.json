@@ -19,6 +19,43 @@
     "credit": "Photography from @social_luxe · Ella Cervetto × The Lawn"
   },
   {
+    "id": "savaya",
+    "title": "Sevara & Josh × Savaya",
+    "short": "Sevara & Josh",
+    "partner": "Savaya",
+    "category": "partnerships",
+    "categoryLabel": "Brand & venue partnership",
+    "place": "Bali",
+    "date": "September 2026",
+    "image": "savaya-patron-detail",
+    "photos": [
+      "savaya-patron-detail",
+      "savaya-patron"
+    ],
+    "logo": "savaya.svg",
+    "description": "Sevara and Josh with Patrón, on their way to Savaya. A brand and venue collaboration shared by Social Luxe.",
+    "source": "https://www.instagram.com/social_luxe/p/DdEBBIuE01P/",
+    "credit": "Photography from @social_luxe · Sevara & Josh × Patrón / Savaya"
+  },
+  {
+    "id": "zumana",
+    "title": "Tori Levett × Zumana",
+    "short": "Tori Levett",
+    "partner": "Zumana",
+    "category": "events",
+    "categoryLabel": "Event & VIP liaison",
+    "place": "Bali",
+    "date": "September 2026",
+    "image": "tori-zumana",
+    "photos": [
+      "tori-zumana"
+    ],
+    "logo": "zumana.svg",
+    "description": "Tori Levett headlining at Zumana. Social Luxe announced its exclusive VIP liaison role for the event, alongside Patrón.",
+    "source": "https://www.instagram.com/social_luxe/p/DdNqJIrTnNl/",
+    "credit": "Event artwork published by @social_luxe · Tori Levett at Zumana"
+  },
+  {
     "id": "patron",
     "title": "Ziara Rae × Patrón",
     "short": "Ziara Rae",
@@ -55,6 +92,42 @@
     "source": "https://www.instagram.com/pony.bali/reel/DdfnHnxoyr7/",
     "photoSource": "https://www.instagram.com/social_luxe/p/DdlFEnvEw7c/",
     "credit": "Photography from @social_luxe · Jason Derulo in Bali"
+  },
+  {
+    "id": "el",
+    "title": "El × Pony",
+    "short": "El",
+    "partner": "Pony",
+    "category": "partnerships",
+    "categoryLabel": "Creator partnership",
+    "place": "Bali",
+    "date": "September 2026",
+    "image": "el-pony",
+    "photos": [
+      "el-pony"
+    ],
+    "logo": "pony.webp",
+    "description": "El (@elliecasei) at Pony. A creator and restaurant collaboration featured on Social Luxe’s account.",
+    "source": "https://www.instagram.com/social_luxe/p/Dc-I_kXzs-v/",
+    "credit": "Photography from @social_luxe · El × Pony"
+  },
+  {
+    "id": "sana",
+    "title": "Michelle × Sana Uluwatu",
+    "short": "Michelle",
+    "partner": "Sana Uluwatu",
+    "category": "partnerships",
+    "categoryLabel": "Creator partnership",
+    "place": "Uluwatu, Bali",
+    "date": "August 2026",
+    "image": "michelle-sana",
+    "photos": [
+      "michelle-sana"
+    ],
+    "logo": "sana.webp",
+    "description": "Michelle (@mishkaivana) at Sana Uluwatu. A creator and hospitality collaboration published by Social Luxe.",
+    "source": "https://www.instagram.com/social_luxe/p/DcVAiyZzYGr/",
+    "credit": "Photography from @social_luxe · Michelle × Sana Uluwatu"
   },
   {
     "id": "skool",
