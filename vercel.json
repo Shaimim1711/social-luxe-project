@@ -34,6 +34,11 @@
   ],
   "redirects": [
     {
+      "source": "/work/",
+      "destination": "/marketing/",
+      "permanent": true
+    },
+    {
       "source": "/work/:path*",
       "destination": "/marketing/",
       "permanent": true

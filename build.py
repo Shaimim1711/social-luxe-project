@@ -92,6 +92,9 @@ write_page('concierge','Luxe Concierge by Social Luxe','Private hospitality, res
 write_page('the-house','The House — Social Luxe','Meet Social Luxe, founded by Grace Kelly. Based in Bali, working internationally.',HOUSE,'house')
 write_page('enquire','Make an Enquiry — Social Luxe','Discuss a brand collaboration or a private booking with Social Luxe.',(ROOT/'templates/enquire.html').read_text())
 write_page('privacy','Privacy & Enquiries — Social Luxe','How information and enquiries are handled on this website.',(ROOT/'templates/privacy.html').read_text())
+# A tiny fallback redirect also supports static previews and preserves project hashes.
+(PUBLIC/'work').mkdir(exist_ok=True)
+(PUBLIC/'work/index.html').write_text('''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Marketing — Social Luxe</title><script>location.replace('/marketing/' + location.search + location.hash);</script><noscript><meta http-equiv="refresh" content="0;url=/marketing/"></noscript></head><body><p>Our collaborations are now in <a href="/marketing/">Marketing</a>.</p></body></html>''')
 (PUBLIC/'robots.txt').write_text('User-agent: *\nDisallow: /\n')
 (PUBLIC/'404.html').write_text(unify_arrows(f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found — Social Luxe</title><meta name="robots" content="noindex"><link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head><body>{header()}<main class="shell section" id="main"><p class="eyebrow">404 / Page not found</p><h1 class="section-title" style="margin:30px 0">Let’s get you back<br>to Social Luxe.</h1>{button('Back to the homepage','/')}</main>{footer()}</body></html>'''))
 print('Built 6 pages and 404 in public/')
