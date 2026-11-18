@@ -1,0 +1,24 @@
+
+<section class="shell enquiry-layout">
+  <div class="enquiry-intro"><p class="eyebrow with-dot">A campaign or a personal request</p><h1 class="display">Let’s <span class="script">talk.</span></h1><p>Tell us a little about what you need. Choose the right team and prepare your enquiry below.</p><a class="contact-email" href="mailto:hello@socialluxe.com.au">hello@socialluxe.com.au ↗</a></div>
+  <div><p class="form-intro">Choose your enquiry. Fields marked * are required.</p><form id="enquiry-form">
+    <fieldset><legend class="sr-only">Enquiry type</legend><div class="service-choice">
+      <label><input type="radio" name="service" value="marketing" checked><span>Marketing &amp; partnerships</span></label>
+      <label><input type="radio" name="service" value="concierge"><span>Luxe Concierge by SL</span></label>
+    </div></fieldset>
+    <div class="field-grid">
+      <label class="field">Your name *<input name="name" autocomplete="name" placeholder="Full name" maxlength="100" required></label>
+      <label class="field">Email address *<input type="email" name="email" autocomplete="email" placeholder="you@example.com" maxlength="150" required></label>
+      <label class="field full"><span id="context-label">Brand or venue</span><input id="context" name="context" placeholder="Your business name" maxlength="180"></label>
+      <label class="field">When?<input name="timing" placeholder="Dates or a rough timeframe" maxlength="120"></label>
+      <label class="field">Budget<input name="budget" placeholder="Amount and currency (optional)" maxlength="120"></label>
+      <label class="field full">What do you have in mind? *<textarea id="message" name="message" rows="4" minlength="10" maxlength="2500" placeholder="Your project, audience and what you would like to achieve…" required></textarea></label>
+    </div>
+    <div class="form-actions"><button class="button" type="submit">Prepare email enquiry <span class="arrow" aria-hidden="true">↗</span></button><p>You’ll review and send this from your own email app. Nothing is sent automatically.</p></div>
+    <p id="concierge-note" class="form-intro" style="margin-top:18px" hidden>An enquiry does not confirm availability or a reservation.</p>
+    <noscript><p>Please email <a class="inline-link" href="mailto:hello@socialluxe.com.au">hello@socialluxe.com.au</a> directly with your enquiry.</p></noscript>
+  </form>
+  <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+  <section class="draft-panel" id="draft-panel" aria-label="Your enquiry draft" hidden><h2>Your enquiry is ready.</h2><p>Review it in your email app and send it to hello@socialluxe.com.au. You can also copy the text.</p><textarea id="draft-text" readonly aria-label="Enquiry text"></textarea><div class="draft-buttons"><a id="draft-open" class="button" href="mailto:hello@socialluxe.com.au">Open email draft <span class="arrow" aria-hidden="true">↗</span></a><button class="button button-outline" id="draft-copy" type="button">Copy enquiry</button></div></section>
+  </div>
+</section>

@@ -1,0 +1,97 @@
+[
+  {
+    "id": "ella",
+    "title": "Ella Cervetto × The Lawn",
+    "short": "Ella Cervetto",
+    "partner": "The Lawn",
+    "category": "partnerships",
+    "categoryLabel": "Creator partnership",
+    "place": "Canggu, Bali",
+    "date": "November 2026",
+    "image": "ella-lawn",
+    "photos": [
+      "ella-lawn",
+      "ella-lawn-detail"
+    ],
+    "logo": "the-lawn.png",
+    "description": "Ella Cervetto at The Lawn Canggu. A creator and venue collaboration shared by Social Luxe as part of its client work.",
+    "source": "https://www.instagram.com/social_luxe/p/DfWwA1ykzfr/",
+    "credit": "Photography from @social_luxe · Ella Cervetto × The Lawn"
+  },
+  {
+    "id": "patron",
+    "title": "Ziara Rae × Patrón",
+    "short": "Ziara Rae",
+    "partner": "Patrón",
+    "category": "partnerships",
+    "categoryLabel": "Brand partnership",
+    "place": "Bali",
+    "date": "September 2026",
+    "image": "ziara-patron",
+    "photos": [
+      "ziara-patron"
+    ],
+    "logo": "patron.svg",
+    "description": "Ziara Rae for Patrón. A brand collaboration featured on Social Luxe’s account under #SLClients.",
+    "source": "https://www.instagram.com/social_luxe/p/Dd2vFVZk_rT/",
+    "credit": "Photography from @social_luxe · Ziara Rae × Patrón"
+  },
+  {
+    "id": "jason",
+    "title": "Jason Derulo at Pony",
+    "short": "Jason Derulo",
+    "partner": "Pony",
+    "category": "hosting",
+    "categoryLabel": "Private hosting",
+    "place": "Bali",
+    "date": "September 2026",
+    "image": "jason-pony",
+    "photos": [
+      "jason-pony",
+      "jason-pony-cover"
+    ],
+    "logo": "pony.webp",
+    "description": "An intimate birthday celebration at Pony, curated by Social Luxe, with drinks by Patrón. Private hosting for Jason Derulo during his time in Bali.",
+    "source": "https://www.instagram.com/pony.bali/reel/DdfnHnxoyr7/",
+    "photoSource": "https://www.instagram.com/social_luxe/p/DdlFEnvEw7c/",
+    "credit": "Photography from @social_luxe · Jason Derulo in Bali"
+  },
+  {
+    "id": "skool",
+    "title": "Tyniesha Hales × Skool Kitchen",
+    "short": "Tyniesha Hales",
+    "partner": "Skool Kitchen",
+    "category": "partnerships",
+    "categoryLabel": "Creator partnership",
+    "place": "Canggu, Bali",
+    "date": "June 2026",
+    "image": "tyniesha-skool",
+    "photos": [
+      "tyniesha-skool",
+      "tyniesha-skool-detail"
+    ],
+    "logo": "skool.png",
+    "description": "Tyniesha Hales at Skool Kitchen. A creator and hospitality collaboration published by Social Luxe under #SLClients.",
+    "source": "https://www.instagram.com/social_luxe/p/DZbkNwxEzaO/",
+    "credit": "Photography from @social_luxe · Tyniesha Hales × Skool Kitchen"
+  },
+  {
+    "id": "wiz",
+    "title": "A private dinner for Wiz Khalifa",
+    "short": "Wiz Khalifa",
+    "partner": "Masonry",
+    "category": "hosting",
+    "categoryLabel": "Private dining",
+    "place": "Bali",
+    "date": "October 2025",
+    "image": "wiz-dinner",
+    "photos": [
+      "wiz-dinner",
+      "wiz-dinner-cover"
+    ],
+    "logo": "masonry.webp",
+    "description": "A private post-performance dinner for Wiz Khalifa in Bali, curated and hosted by Luxe Concierge. The original publication features Masonry Bali.",
+    "source": "https://www.instagram.com/luxeconciergebysl/p/DQL3hcGEhQ0/",
+    "credit": "Photography from @luxeconciergebysl · Private dinner in Bali"
+  }
+]

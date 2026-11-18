@@ -1,185 +1,71 @@
-"""Build a dependency-free static site. Run: python3 build.py."""
+"""Build Social Luxe's dependency-free website: python3 build.py."""
 from pathlib import Path
-import shutil
-
+import html, json, shutil
 ROOT = Path(__file__).resolve().parent
-PUBLIC = ROOT / "public"
+PUBLIC = ROOT / 'public'
 PUBLIC.mkdir(exist_ok=True)
-shutil.copytree(ROOT / "assets", PUBLIC / "assets", dirs_exist_ok=True)
-for name in ("styles.css", "app.js"):
-    shutil.copyfile(ROOT / name, PUBLIC / name)
+shutil.copytree(ROOT / 'assets', PUBLIC / 'assets', dirs_exist_ok=True)
+for name in ('styles.css', 'app.js', 'material-scene.js'):
+    if (ROOT / name).exists(): shutil.copyfile(ROOT / name, PUBLIC / name)
+PROJECTS = json.loads((ROOT / 'projects.json').read_text())
 
-def button(text, href, cls=""):
-    return f'<a class="button {cls}" href="{href}">{text}<span class="arrow" aria-hidden="true">↗</span></a>'
-
-def header(active=""):
-    items = [("Marketing", "/marketing/", "marketing"), ("Private Concierge", "/concierge/", "concierge"), ("The House", "/the-house/", "house")]
-    links = "".join(f'<a class="nav-link" href="{href}"' + (' aria-current="page"' if active == key else '') + f'>{label}</a>' for label, href, key in items)
-    mobile = "".join(f'<a class="mobile-link" href="{href}">{label}</a>' for label, href, key in items)
-    return f'''<a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header"><div class="shell header-inner">
-      <a class="brand" href="/" aria-label="Social Luxe home">Social Luxe<span class="brand-period">.</span></a>
-      <nav class="desktop-nav" aria-label="Main navigation">{links}</nav>
-      {button("Enquire", "/enquire/", "header-action")}
-      <button class="menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false"><span></span><span></span></button>
-    </div></header>
-    <div class="mobile-menu" id="mobile-menu" hidden><nav aria-label="Mobile navigation">{mobile}{button("Get in touch", "/enquire/")}</nav><p><a href="mailto:hello@socialluxe.com.au">hello@socialluxe.com.au</a></p></div>'''
-
+def button(label, href, cls=''):
+    return f'<a class="button {cls}" href="{href}">{label}<span aria-hidden="true">↗</span></a>'
+def wordmark():
+    return 'Social Luxe<span class="brand-period">.</span>'
+def concierge_mark(tag='h2'):
+    return f'<{tag} class="luxe-mark">Luxe Concierge<span class="luxe-signature"><span class="script">by</span> <span class="brand">{wordmark()}</span></span></{tag}>'
+def header(active=''):
+    items = [('Selected work','/work/','work'),('Marketing','/marketing/','marketing'),('Concierge','/concierge/','concierge'),('The house','/the-house/','house')]
+    links = ''.join(f'<a href="{url}" class="nav-link"' + (' aria-current="page"' if active == key else '') + f'>{label}</a>' for label,url,key in items)
+    return f'''<a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="Social Luxe home">{wordmark()}</a><nav class="desktop-nav" aria-label="Main navigation">{links}</nav>{button('Let’s talk','/enquire/','header-action')}<button class="menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false"><span></span><span></span></button></div></header><div id="mobile-menu" class="mobile-menu" hidden><nav aria-label="Mobile navigation">{links}{button('Make an enquiry','/enquire/')}</nav><p>Bali, Indonesia. Working internationally.</p></div>'''
 def footer():
-    return '''<footer class="site-footer"><div class="shell">
-      <div class="footer-top"><div><a class="brand" href="/">Social Luxe<span class="brand-period">.</span></a><p class="footer-description">Australia. Working worldwide.</p></div>
-      <div class="footer-nav">
-        <div class="footer-column"><span class="eyebrow">Explore</span><a href="/marketing/">Marketing</a><a href="/concierge/">Luxe Concierge by SL</a><a href="/the-house/">The House</a></div>
-        <div class="footer-column"><span class="eyebrow">Get in touch</span><a href="/enquire/">Make an enquiry ↗</a><a href="mailto:hello@socialluxe.com.au">hello@socialluxe.com.au</a></div>
-        <div class="footer-column"><span class="eyebrow">Follow along</span><a href="https://www.instagram.com/social_luxe/" target="_blank" rel="noopener noreferrer">Social Luxe ↗</a><a href="https://www.instagram.com/luxeconciergebysl/" target="_blank" rel="noopener noreferrer">Luxe Concierge ↗</a></div>
-      </div></div><div class="footer-bottom"><span>© 2026 Social Luxe.</span><a href="/privacy/">Privacy &amp; enquiries</a><span>Marketing · Partnerships · Private bookings</span></div>
-    </div></footer>'''
-
+    return f'''<footer class="site-footer"><div class="shell"><div class="footer-top"><div><a class="brand" href="/">{wordmark()}</a><p class="footer-description">Based in Bali.<br>Working internationally.</p></div><div class="footer-nav"><div class="footer-column"><span class="eyebrow">Explore</span><a href="/work/">Selected work</a><a href="/marketing/">Marketing</a><a href="/concierge/">Luxe Concierge</a><a href="/the-house/">The house</a></div><div class="footer-column"><span class="eyebrow">In conversation</span><a href="/enquire/">Make an enquiry ↗</a><a href="mailto:hello@socialluxe.com.au">hello@socialluxe.com.au</a><a href="https://www.instagram.com/social_luxe/" target="_blank" rel="noopener noreferrer">@social_luxe ↗</a><a href="https://www.instagram.com/luxeconciergebysl/" target="_blank" rel="noopener noreferrer">@luxeconciergebysl ↗</a></div></div></div><div class="footer-bottom"><span>© 2026 Social Luxe.</span><span>Bali · Indonesia · Worldwide enquiries</span><a href="/privacy/">Privacy &amp; enquiries</a></div></div></footer>'''
 def contact_band():
-    return f'''<section class="contact-band"><div class="shell contact-band-inner">
-      <div class="reveal"><p class="eyebrow">Let’s talk</p><h2>Get in <span class="script">touch.</span></h2></div>
-      <div class="contact-options reveal"><div class="contact-option"><p class="eyebrow">For brands &amp; venues</p>{button("Discuss a campaign", "/enquire/?service=marketing")}</div><div class="contact-option"><p class="eyebrow">For private clients</p>{button("Plan a booking", "/enquire/?service=concierge")}</div></div>
-    </div></section>'''
-
+    return f'''<section class="contact-band"><div class="shell"><p class="eyebrow reveal">Start a conversation</p><div class="contact-band-inner"><h2 class="reveal">What do you<br>have in <span class="script">mind?</span></h2><div class="contact-options reveal"><p>A brand brief. A private occasion.<br>Tell us what you’re planning.</p>{button('Discuss a campaign','/enquire/?service=marketing')}{button('Plan a private booking','/enquire/?service=concierge','button-outline')}</div></div></div></section>'''
+def logo(p):
+    return f'<img class="partner-logo" src="/assets/logos/{p["logo"]}" alt="{html.escape(p["partner"])}" loading="lazy">' if p.get('logo') else html.escape(p['partner'])
+def card(p):
+    return f'''<article class="project-card" id="{p['id']}" data-category="{p['category']}"><a class="project-cover" href="/work/#{p['id']}" data-project="{p['id']}" aria-label="Explore {html.escape(p['title'])}"><img class="project-photo" src="/assets/projects/{p['image']}.jpg" alt="{html.escape(p['credit'])}" width="1080" height="1400" loading="lazy"><span class="project-type">{p['categoryLabel']}</span><span class="project-logo">{logo(p)}</span><span class="project-open" aria-hidden="true">+</span></a><div class="project-caption"><h3>{p['title']}</h3><p>{p['place']} <span>{p['date']}</span></p></div></article>'''
+def work_section(projects=PROJECTS, heading='Selected work.', full=False):
+    filters = '''<div class="work-filters" role="group" aria-label="Filter projects"><button class="active" data-filter="all" aria-pressed="true">All projects <span>05</span></button><button data-filter="partnerships" aria-pressed="false">Brand partnerships</button><button data-filter="hosting" aria-pressed="false">Private hosting</button></div>'''
+    controls = f'''<div class="gallery-controls"><p class="gallery-status" aria-live="polite">{len(projects)} projects</p><div><button class="gallery-prev" aria-label="Previous projects">←</button><button class="gallery-next" aria-label="Next projects">→</button></div></div>'''
+    return f'''<section id="work" class="work-section section" data-gallery><div class="shell"><div class="section-head reveal"><div><p class="eyebrow">People, brands &amp; places</p><h2 class="section-title">{heading}</h2></div><p>A closer look at the collaborations<br>and private experiences we’re part of.</p></div>{filters if len(projects)==5 else ''}</div><div class="project-rail {'project-grid' if full else ''}" tabindex="0" role="region" aria-label="Selected collaborations">{''.join(card(p) for p in projects)}</div><div class="shell">{controls if not full else ''}<p class="source-note">From the Social Luxe and Luxe Concierge archives. Each project links to its original publication.</p></div></section>'''
+def brand_strip():
+    return f'''<section class="brand-strip shell" aria-label="Brands and venues in our selected projects"><p class="eyebrow">A few names from our recent projects</p><div class="brand-logos">{''.join(f'<a href="/work/#{p["id"]}" data-project="{p["id"]}" aria-label="Explore {html.escape(p["title"])}">{logo(p)}</a>' for p in PROJECTS)}</div></section>'''
+def modal():
+    return '''<dialog id="project-dialog" aria-labelledby="project-title"><button class="dialog-close" aria-label="Close project">×</button><div class="dialog-layout"><div class="dialog-visual"><img id="dialog-photo" alt="" width="1080" height="1400"><div class="dialog-photo-controls"><button id="photo-prev" aria-label="Previous photo">←</button><span id="photo-count" aria-live="polite"></span><button id="photo-next" aria-label="Next photo">→</button></div></div><div class="dialog-copy"><p id="project-category" class="eyebrow"></p><h2 id="project-title"></h2><div id="dialog-logo"></div><p id="project-description"></p><dl><div><dt>Location</dt><dd id="project-place"></dd></div><div><dt>Published</dt><dd id="project-date"></dd></div></dl><a id="project-source" class="button" href="https://www.instagram.com/social_luxe/" target="_blank" rel="noopener noreferrer">View original post <span aria-hidden="true">↗</span></a><a id="project-photo-source" class="text-link" href="https://www.instagram.com/social_luxe/" target="_blank" rel="noopener noreferrer" hidden>View photo publication ↗</a><p id="project-credit" class="source-note"></p></div></div></dialog>'''
 def faq(items):
-    return '<div class="faq-list">' + "".join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q, a in items) + '</div>'
-
-def process():
-    return '''<div class="process-grid">
-      <div class="process-item reveal"><span class="number">01 /</span><h3>Tell us what you need.</h3><p>A campaign brief, a booking or an idea. Share the details and the dates you have in mind.</p></div>
-      <div class="process-item reveal delay-1"><span class="number">02 /</span><h3>Talk it through.</h3><p>We discuss the right approach, the people involved and the options for your budget.</p></div>
-      <div class="process-item reveal delay-2"><span class="number">03 /</span><h3>Confirm the details.</h3><p>Agree the scope and arrangements before anything is confirmed.</p></div>
-    </div>'''
-
-def archive():
-    return '''<div class="archive">
-      <a class="archive-item" href="https://www.linkedin.com/posts/social-luxe_sandiego-california-locationbookings-activity-7056707686544912384-Ndfm" target="_blank" rel="noopener noreferrer"><span class="eyebrow">San Diego / 2023</span><h3>Villa Pantera</h3><span class="caption">Venue bookings &amp; brand activations</span><span class="arrow" aria-hidden="true">↗</span></a>
-      <a class="archive-item" href="https://www.instagram.com/social_luxe/p/DdlFEnvEw7c/" target="_blank" rel="noopener noreferrer"><span class="eyebrow">Bali / 2026</span><h3>Jason Derulo in Bali</h3><span class="caption">Private hosting with Luxe Concierge</span><span class="arrow" aria-hidden="true">↗</span></a>
-    </div><p class="archive-note">Selected moments from our public archive. Open a story to see the original post.</p>'''
-
+    return '<div class="faq-list">'+''.join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q,a in items)+'</div>'
 HOME = f'''
-<section class="home-hero shell">
-  <h1 class="display hero-enter"><span>Influencer marketing.</span><span><span class="script hero-script">Private</span> concierge.</span></h1>
-  <p class="hero-copy hero-enter">Campaigns for brands and venues.<br>Bookings for private clients.</p>
-  <div class="hero-actions hero-enter">{button("For brands & venues", "/marketing/")}{button("For private clients", "/concierge/")}</div>
-  <div class="hero-bottom"><p class="eyebrow">Australia · Worldwide</p><a class="scroll-link" href="#our-world">Explore Social Luxe <span aria-hidden="true">↓</span></a></div>
-</section>
-<section class="shell service-grid" id="our-world" aria-label="Our two services">
-  <article class="service-panel reveal"><a href="/marketing/" class="photo" style="display:block" aria-label="Explore marketing and partnerships">
-    <img src="/assets/marketing.jpg" alt="Editorial fashion shoot with a photographer at a coastal venue" width="1536" height="1024" fetchpriority="high">
-    <span class="photo-label">For brands &amp; venues</span>
-    <div class="photo-caption"><h2>Marketing &amp;<br>partnerships.</h2><span class="circle-arrow" aria-hidden="true">↗</span></div>
-  </a><div class="panel-info"><p>Influencer campaigns, brand collaborations<br>and venue partnerships.</p><span class="eyebrow">Social Luxe / 01</span></div></article>
-  <article class="service-panel reveal delay-1"><a href="/concierge/" class="photo" style="display:block" aria-label="Explore Luxe Concierge by SL">
-    <img src="/assets/concierge.jpg" alt="A private dining table overlooking the sea at sunset" width="1536" height="1024" fetchpriority="high">
-    <span class="photo-label">For private clients</span>
-    <div class="photo-caption"><h2 class="concierge-wordmark"><span class="script">Luxe</span><span class="wordmark-bottom">CONCIERGE <span class="by-sl">BY SL</span></span></h2><span class="circle-arrow" aria-hidden="true">↗</span></div>
-  </a><div class="panel-info"><p>Private reservations, personal requests<br>and the arrangements around them.</p><span class="eyebrow">Social Luxe / 02</span></div></article>
-</section>
-<section class="section shell intro-grid">
-  <div class="intro-copy reveal"><p class="eyebrow with-dot">The house</p><h2 class="section-title">Meet<br>Social Luxe.</h2><p>Social Luxe is a marketing house and private concierge founded by Grace Kelly. We work with brands, venues, talent and private clients — with a different approach for every brief.</p><a class="text-link" href="/the-house/">Meet Social Luxe <span aria-hidden="true">↗</span></a></div>
-  <div class="detail-composition reveal delay-1"><div class="photo"><img src="/assets/detail.jpg" alt="A raspberry flower being placed on an ivory table setting" width="1254" height="1254" loading="lazy"></div><div class="detail-note" aria-label="Luxe Concierge by SL"><span class="script">Luxe Concierge</span><span class="eyebrow">by Social Luxe</span></div></div>
-</section>
-<section class="section shell" style="padding-top:0"><div class="section-head reveal"><div><p class="eyebrow with-dot">From the archive</p><h2 class="section-title">Selected moments.</h2></div><p>Venue bookings, collaborations<br>and private hosting.</p></div><div class="reveal">{archive()}</div></section>
-<section class="section shell" style="border-top:1px solid var(--line)"><div class="section-head reveal"><div><p class="eyebrow with-dot">How it works</p><h2 class="section-title">Start with a conversation.</h2></div></div>{process()}</section>
-{contact_band()}
-'''
-
+<section class="visual-hero"><div class="shell hero-heading"><p class="eyebrow hero-enter"><span class="status-dot"></span> Based in Bali. Working internationally.</p><h1 class="hero-enter">{wordmark()}</h1><div class="hero-subline hero-enter"><p>Influencer partnerships.<br>Private experiences.</p><div>{button('Explore our work','#work')}<a class="text-link" href="/concierge/">Meet Luxe Concierge ↗</a></div></div></div>
+<div class="hero-stage" aria-label="A selection of Social Luxe collaborations"><div class="material-object"><div class="scene-fallback" aria-hidden="true"><i></i><i></i></div><canvas id="material-scene" aria-hidden="true"></canvas></div><a class="floating-photo floating-ella" href="/work/#ella" data-project="ella" aria-label="Explore Ella Cervetto and The Lawn"><img src="/assets/projects/ella-lawn.jpg" alt="Ella Cervetto at The Lawn, Bali" width="1080" height="1400" fetchpriority="high"><span><b>Ella Cervetto × The Lawn</b><small>Creator partnership · Bali</small><i aria-hidden="true">↗</i></span></a><a class="floating-photo floating-jason" href="/work/#jason" data-project="jason" aria-label="Explore Jason Derulo at Pony"><img src="/assets/projects/jason-pony.jpg" alt="Jason Derulo celebrating his birthday at Pony" width="1080" height="1400"><span><b>Jason Derulo at Pony</b><small>Private hosting · Bali</small><i aria-hidden="true">↗</i></span></a><div class="material-label" aria-hidden="true"><span>SL</span><small>Bali.<br>International.<br>Social Luxe.</small></div></div><div class="shell hero-stage-footer"><a href="#work" class="scroll-link">Discover the collaborations <span aria-hidden="true">↓</span></a><button id="motion-toggle" class="motion-toggle" aria-pressed="false"><span aria-hidden="true">Ⅱ</span> Pause motion</button></div></section>
+{brand_strip()}{work_section()}
+<section class="worlds-section section"><div class="shell"><div class="section-head reveal"><div><p class="eyebrow">The Social Luxe house</p><h2 class="section-title">Two ways in.</h2></div><p>For your brand.<br>For your own plans.</p></div><div class="worlds-grid"><article class="world-card marketing-world reveal"><span class="eyebrow">01 / For brands &amp; venues</span><h3>Social Luxe<span>.</span></h3><p>Creator partnerships, brand collaborations<br>and hospitality experiences.</p><div class="stacked-images" aria-hidden="true"><img src="/assets/projects/ziara-patron.jpg" alt="" loading="lazy"><img src="/assets/projects/tyniesha-skool.jpg" alt="" loading="lazy"></div>{button('Explore marketing','/marketing/','button-light')}</article><article class="world-card concierge-world reveal delay-1"><img class="world-backdrop" src="/assets/projects/wiz-dinner.jpg" alt="The private dinner setting prepared for Wiz Khalifa in Bali" loading="lazy"><div class="world-content"><span class="eyebrow">02 / For private clients</span>{concierge_mark('h3')}<p>Private dining, stays and personal requests.<br>Tell us where you want to be.</p>{button('Explore the concierge','/concierge/')}</div></article></div></div></section>
+<section class="section shell bali-section"><div class="bali-title reveal"><p class="eyebrow">Our point of view</p><h2 class="section-title">Bali is<br><span class="script">home.</span></h2><span class="coordinate">8.4095° S · 115.1889° E</span></div><div class="bali-copy reveal"><p class="body-large">We bring brands, venues and people together on the island. And we’re taking those connections further.</p><p>Founded by Grace Kelly, Social Luxe combines influencer partnerships with private hospitality. For a project in Bali or a brief beyond the island, start with a conversation.</p><a class="text-link" href="/the-house/">Inside Social Luxe ↗</a></div></section>{contact_band()}'''
 MARKETING = f'''
-<section class="shell page-intro page-intro-grid"><div class="reveal"><p class="eyebrow with-dot">Social Luxe / Marketing</p><h1 class="display">Marketing &amp;<br><span class="script">partnerships.</span></h1></div><div class="reveal delay-1"><p class="body-large">Influencer campaigns and collaborations for brands and venues.</p>{button("Discuss a campaign", "/enquire/?service=marketing")}</div></section>
-<div class="shell full-photo photo reveal"><img src="/assets/marketing.jpg" width="1536" height="1024" alt="A campaign shoot in a coastal architectural setting" fetchpriority="high"></div>
-<section class="section shell"><div class="section-head reveal"><div><p class="eyebrow with-dot">What we do</p><h2 class="section-title">People. Content.<br>Collaborations.</h2></div><p>Start with your brand, your audience<br>and what you want to achieve.</p></div>
-  <div class="offerings reveal">
-    <div class="offering"><span class="number">01 /</span><h3>Creator &amp; talent partnerships</h3><p>Bring your brief to us. We help identify relevant creators and talent, discuss the collaboration and coordinate the agreed arrangements.</p></div>
-    <div class="offering"><span class="number">02 /</span><h3>Campaign coordination</h3><p>From the first introduction to the agreed content and timings, keep your collaboration moving with a clear point of contact.</p></div>
-    <div class="offering"><span class="number">03 /</span><h3>Venue collaborations</h3><p>Connect your hotel, restaurant or venue with creators, shoots and brand experiences that suit the space.</p></div>
-  </div>
-</section>
-<section class="section shell" style="padding-top:0"><div class="section-head reveal"><div><p class="eyebrow with-dot">See more</p><h2 class="section-title">On our socials.</h2></div><p>Explore collaborations and recent updates<br>on Social Luxe’s Instagram.</p></div><a class="text-link" href="https://www.instagram.com/social_luxe/" target="_blank" rel="noopener noreferrer">Visit @social_luxe <span aria-hidden="true">↗</span></a></section>
-<section class="section shell page-faq" style="border-top:1px solid var(--line)"><div class="reveal"><p class="eyebrow with-dot">A few details</p><h2 class="section-title">Before we<br>get started.</h2></div><div class="reveal delay-1">{faq([
-("Who do you work with?", "Brands and establishments looking to collaborate with talent or creators. Tell us about your business and the audience you want to reach."),
-("What should I include in my brief?", "Your brand or venue, the objective, your ideal timing, the audience and a working budget. An early idea is enough to start the conversation."),
-("Can I enquire about a specific talent?", "Yes. Include the person you have in mind in your brief. Availability, suitability and terms need to be discussed before a collaboration can be confirmed.")
-])}</div></section>{contact_band()}
-'''
-
+<section class="shell page-intro page-intro-grid"><div><p class="eyebrow hero-enter">For brands &amp; establishments</p><h1 class="display hero-enter">Your brand.<br>The right<br><span class="script pink">people.</span></h1></div><div class="page-intro-copy hero-enter"><p class="body-large">Creator partnerships and brand experiences, with Bali at the centre.</p>{button('Discuss a campaign','/enquire/?service=marketing')}</div></section>
+<div class="shell campaign-triptych"><figure><img src="/assets/projects/ella-lawn.jpg" alt="Ella Cervetto at The Lawn" fetchpriority="high"><figcaption>Ella Cervetto × The Lawn</figcaption></figure><figure><img src="/assets/projects/ziara-patron.jpg" alt="Ziara Rae for Patrón" fetchpriority="high"><figcaption>Ziara Rae × Patrón</figcaption></figure><figure><img src="/assets/projects/tyniesha-skool.jpg" alt="Tyniesha Hales at Skool Kitchen" loading="lazy"><figcaption>Tyniesha Hales × Skool Kitchen</figcaption></figure></div>{brand_strip()}
+<section class="section shell"><div class="section-head reveal"><div><p class="eyebrow">From introduction to experience</p><h2 class="section-title">Made around<br>your brief.</h2></div></div><div class="offerings"><details open><summary><span>01</span>Creator &amp; talent partnerships</summary><p>Find the people who make sense for your brand, discuss the collaboration and coordinate the agreed arrangements.</p></details><details><summary><span>02</span>Brand experiences</summary><p>Bring people together around your brand. From the venue and guest arrangements to the agreed content and timing, we coordinate the details with you.</p></details><details><summary><span>03</span>Hospitality collaborations</summary><p>Connect your restaurant, hotel or destination with creators and talent through a collaboration suited to the place.</p></details></div></section>{work_section([p for p in PROJECTS if p['category']=='partnerships'],'In good company.')}{contact_band()}'''
 CONCIERGE = f'''
-<section class="concierge-hero"><img src="/assets/concierge.jpg" width="1536" height="1024" alt="A seaside terrace set for a private dinner at sunset" fetchpriority="high">
-  <div class="concierge-hero-inner hero-enter"><p class="eyebrow">Private bookings &amp; personal requests</p><h1><span class="script">Luxe</span><span class="concierge-title">CONCIERGE</span><span class="by-line">BY SL</span></h1><p>Tell us where you’re going<br>and what you have in mind.</p>{button("Plan a booking", "/enquire/?service=concierge")}</div>
-</section>
-<section class="section shell concierge-intro">
-  <div class="reveal"><p class="eyebrow with-dot">For private clients</p><h2 class="section-title">Private bookings.<br><span class="script pink">Personal requests.</span></h2></div>
-  <div class="reveal delay-1"><p class="body-large">Luxe Concierge by SL arranges bookings and personal requests for private clients, including talent and people travelling in a private capacity.</p><div class="concierge-services">
-    <div><h3>Stays</h3><p>Share your destination, dates and the kind of place you’re looking for.</p></div>
-    <div><h3>Dining</h3><p>A table for two, a group reservation or a dinner for a particular occasion.</p></div>
-    <div><h3>Private occasions</h3><p>Venue enquiries, guest arrangements and plans for your occasion.</p></div>
-    <div><h3>Getting around</h3><p>Let us know your transport and arrival requirements alongside your booking.</p></div>
-  </div><a class="text-link" href="/enquire/?service=concierge">Tell us about your plans <span aria-hidden="true">↗</span></a></div>
-</section>
-<div class="shell image-pair"><div class="photo reveal"><img src="/assets/concierge.jpg" alt="A dining terrace with flowers and views of the coast" width="1536" height="1024" loading="lazy"></div><div class="photo reveal delay-1"><img src="/assets/detail.jpg" alt="Flower and linen details at a table setting" width="1254" height="1254" loading="lazy"></div></div>
-<section class="section shell"><div class="section-head reveal"><div><p class="eyebrow with-dot">From request to arrangements</p><h2 class="section-title">A personal point of contact.</h2></div></div>{process()}</section>
-<section class="section shell page-faq" style="padding-top:0"><div class="reveal"><p class="eyebrow with-dot">Good to know</p><h2 class="section-title">Your questions.</h2></div><div class="reveal delay-1">{faq([
-("Is the concierge only for talent and public figures?", "No. Luxe Concierge by SL also works with private clients. You do not need to be a creator, celebrity or public figure to make an enquiry."),
-("What information do you need?", "Your destination or venue, preferred dates, number of guests, budget and any requests you would like us to consider."),
-("Is my request a confirmed reservation?", "No. An enquiry starts a conversation. Availability, pricing and booking terms must be agreed before a reservation is confirmed."),
-("Can I make a request that isn’t listed here?", "Of course. Describe what you need and we’ll discuss whether we can help, including any fees and arrangements involved.")
-])}</div></section>{contact_band()}
-'''
+<section class="concierge-hero"><img class="concierge-backdrop" src="/assets/projects/wiz-dinner.jpg" alt="A private dinner setting in Bali, from the Luxe Concierge archive" fetchpriority="high"><div class="concierge-hero-inner shell"><p class="eyebrow hero-enter">Private hospitality · Bali &amp; beyond</p><div class="hero-enter">{concierge_mark('h1')}</div><p class="hero-enter">The table. The stay.<br>The plans around them.</p><div class="hero-enter">{button('Plan a private booking','/enquire/?service=concierge')}</div><a class="concierge-photo-credit" href="/work/#wiz" data-project="wiz">From the archive: a private dinner for Wiz Khalifa ↗</a></div></section>
+<section class="section shell concierge-intro"><div class="reveal"><p class="eyebrow">Your time in Bali</p><h2 class="section-title">A personal<br>point of contact.</h2></div><div class="reveal"><p class="body-large">For private clients, visiting talent and anyone planning something personal.</p><p>You don’t need to be a public figure to work with Luxe Concierge. Share your dates, your destination and the details that matter to you.</p><a class="text-link" href="/enquire/?service=concierge">Tell us what you have in mind ↗</a></div></section><section class="shell concierge-services"><article><span class="number">01</span><h3>Stays.</h3><p>The destination, the dates and the kind of place you’re looking for.</p></article><article><span class="number">02</span><h3>Dining.</h3><p>A table for two, a private room or a dinner for your guests.</p></article><article><span class="number">03</span><h3>Occasions.</h3><p>Birthdays, celebrations and the arrangements around them.</p></article><article><span class="number">04</span><h3>Personal requests.</h3><p>Arrival plans, transfers and anything else you’d like to discuss.</p></article></section>
+{work_section([p for p in PROJECTS if p['category']=='hosting'],'A few private moments.')}<section class="section shell page-faq"><div><p class="eyebrow">Before you enquire</p><h2 class="section-title">A few details.</h2></div>{faq([('Is this only for talent and public figures?','No. Luxe Concierge works with private clients as well as visiting talent. You do not need to be a creator or public figure to enquire.'),('Can you help outside Bali?','Tell us your destination and plans. We’ll discuss what can be arranged and confirm the scope before proceeding.'),('Does an enquiry confirm a reservation?','No. Availability, fees, pricing and booking terms must be agreed before any reservation is confirmed.')])}</section>{contact_band()}'''
+HOUSE = f'''<section class="shell page-intro house-intro"><p class="eyebrow hero-enter">The house</p><h1 class="display hero-enter">Social Luxe.<br>Based in <span class="script pink">Bali.</span></h1><p class="body-large hero-enter">A marketing house and private concierge, founded by Grace Kelly.</p></section><section class="section shell founder-layout"><div class="founder-card reveal"><span class="founder-monogram" aria-hidden="true">SL.</span><span class="script">Grace Kelly</span><span class="eyebrow">Founder · Social Luxe</span></div><div class="founder-story reveal"><h2 class="section-title">People, places<br>and a personal<br>approach.</h2><p>For brands and establishments, Social Luxe brings together creators, talent and hospitality through collaborations.</p><p>For private clients, Luxe Concierge arranges reservations and personal experiences. The same attention to people and details runs through both.</p><p>Bali is our base. As Social Luxe grows internationally, every new project starts with a conversation.</p>{button('Get in touch','/enquire/')}</div></section>{work_section(heading='From our world.')}{contact_band()}'''
+WORK = f'''<section class="shell page-intro work-intro"><p class="eyebrow hero-enter">The Social Luxe archive</p><h1 class="display hero-enter">People you know.<br>Places to <span class="script pink">remember.</span></h1><p class="body-large hero-enter">Five collaborations and private experiences, from our Instagram archive.</p></section>{work_section(full=True)}{contact_band()}'''
 
-HOUSE = f'''
-<section class="shell page-intro house-intro"><p class="eyebrow with-dot hero-enter">The House</p><h1 class="display hero-enter">Social Luxe.<br>Founded by <span class="script">Grace Kelly.</span></h1><p class="body-large hero-enter">A marketing house and private concierge, bringing together brands, venues, talent and private clients.</p></section>
-<section class="section shell founder-layout" style="padding-top:25px"><div class="founder-card reveal"><span class="script">Grace Kelly</span><span class="eyebrow">Founder · Social Luxe</span></div><div class="founder-story reveal delay-1"><h2 class="section-title">One house.<br>Two ways to work with us.</h2><p>For brands and establishments, Social Luxe coordinates influencer collaborations and partnerships.</p><p>For private clients, Luxe Concierge by SL arranges reservations and personal requests. Each starts with a conversation about the people, places and details involved.</p><a class="text-link" href="/enquire/">Meet us over a conversation <span aria-hidden="true">↗</span></a></div></section>
-<section class="section shell" style="padding-top:0"><div class="section-head reveal"><div><p class="eyebrow with-dot">In practice</p><h2 class="section-title">From the archive.</h2></div><p>A look at venue bookings<br>and private hosting.</p></div><div class="reveal">{archive()}</div></section>{contact_band()}
-'''
-
-ENQUIRE = '''
-<section class="shell enquiry-layout">
-  <div class="enquiry-intro"><p class="eyebrow with-dot">A campaign or a personal request</p><h1 class="display">Let’s <span class="script">talk.</span></h1><p>Tell us a little about what you need. Choose the right team and prepare your enquiry below.</p><a class="contact-email" href="mailto:hello@socialluxe.com.au">hello@socialluxe.com.au ↗</a></div>
-  <div><p class="form-intro">Choose your enquiry. Fields marked * are required.</p><form id="enquiry-form">
-    <fieldset><legend class="sr-only">Enquiry type</legend><div class="service-choice">
-      <label><input type="radio" name="service" value="marketing" checked><span>Marketing &amp; partnerships</span></label>
-      <label><input type="radio" name="service" value="concierge"><span>Luxe Concierge by SL</span></label>
-    </div></fieldset>
-    <div class="field-grid">
-      <label class="field">Your name *<input name="name" autocomplete="name" placeholder="Full name" maxlength="100" required></label>
-      <label class="field">Email address *<input type="email" name="email" autocomplete="email" placeholder="you@example.com" maxlength="150" required></label>
-      <label class="field full"><span id="context-label">Brand or venue</span><input id="context" name="context" placeholder="Your business name" maxlength="180"></label>
-      <label class="field">When?<input name="timing" placeholder="Dates or a rough timeframe" maxlength="120"></label>
-      <label class="field">Budget<select name="budget"><option value="">Select a range (AUD)</option><option>Under $5,000 AUD</option><option>$5,000–$15,000 AUD</option><option>$15,000–$50,000 AUD</option><option>$50,000+ AUD</option><option>To discuss</option></select></label>
-      <label class="field full">What do you have in mind? *<textarea id="message" name="message" rows="4" minlength="10" maxlength="2500" placeholder="Your project, audience and what you would like to achieve…" required></textarea></label>
-    </div>
-    <div class="form-actions"><button class="button" type="submit">Prepare email enquiry <span class="arrow" aria-hidden="true">↗</span></button><p>You’ll review and send this from your own email app. Nothing is sent automatically.</p></div>
-    <p id="concierge-note" class="form-intro" style="margin-top:18px" hidden>An enquiry does not confirm availability or a reservation.</p>
-    <noscript><p>Please email <a class="inline-link" href="mailto:hello@socialluxe.com.au">hello@socialluxe.com.au</a> directly with your enquiry.</p></noscript>
-  </form>
-  <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
-  <section class="draft-panel" id="draft-panel" aria-label="Your enquiry draft" hidden><h2>Your enquiry is ready.</h2><p>Review it in your email app and send it to hello@socialluxe.com.au. You can also copy the text.</p><textarea id="draft-text" readonly aria-label="Enquiry text"></textarea><div class="draft-buttons"><a id="draft-open" class="button" href="mailto:hello@socialluxe.com.au">Open email draft <span class="arrow" aria-hidden="true">↗</span></a><button class="button button-outline" id="draft-copy" type="button">Copy enquiry</button></div></section>
-  </div>
-</section>
-'''
-
-PRIVACY = '''<section class="shell privacy-copy"><p class="eyebrow">Social Luxe</p><h1 class="display">Privacy &amp; enquiries.</h1><h2>Information you enter</h2><p>The enquiry form prepares a message in your browser. Your form details are not uploaded to a site database. Nothing is sent until you choose to send the message from your own email app.</p><h2>Email correspondence</h2><p>If you email Social Luxe, the information you provide will be included in that correspondence. Share only what is needed for the initial enquiry. For privacy questions or requests about your correspondence, contact <a class="inline-link" href="mailto:hello@socialluxe.com.au">hello@socialluxe.com.au</a>.</p><h2>Site hosting</h2><p>The site is hosted by Vercel, which may process connection information to serve and secure the site. This version does not use advertising trackers or analytics cookies.</p><h2>External links</h2><p>Instagram and LinkedIn links open external services, which have their own privacy policies.</p></section>'''
-
-def write_page(path, title, description, content, active="", body_class=""):
-    folder = PUBLIC / path
-    folder.mkdir(parents=True, exist_ok=True)
-    markup = f'''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{title}</title><meta name="description" content="{description}">
-<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#f8f5f1">
-<meta property="og:title" content="{title}"><meta property="og:description" content="{description}"><meta property="og:type" content="website">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/assets/fonts/inter-tight.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head>
-<body class="{body_class}">{header(active)}<main id="main">{content}</main>{footer()}</body></html>'''
-    (folder / "index.html").write_text(markup)
-
-write_page("", "Social Luxe — Marketing & Private Concierge", "Influencer marketing for brands and venues. Private bookings and personal requests with Luxe Concierge by SL.", HOME)
-write_page("marketing", "Marketing & Partnerships — Social Luxe", "Influencer campaigns, creator partnerships and venue collaborations with Social Luxe.", MARKETING, "marketing")
-write_page("concierge", "Luxe Concierge by SL — Private Concierge", "Private bookings, reservations and personal requests. Explore Luxe Concierge by SL.", CONCIERGE, "concierge", "concierge-page")
-write_page("the-house", "The House — Social Luxe", "Meet Social Luxe, the marketing house and private concierge founded by Grace Kelly.", HOUSE, "house")
-write_page("enquire", "Make an Enquiry — Social Luxe", "Discuss a brand collaboration or a private booking with Social Luxe.", ENQUIRE)
-write_page("privacy", "Privacy & Enquiries — Social Luxe", "How enquiries and information are handled on this site.", PRIVACY)
-(PUBLIC / "robots.txt").write_text("User-agent: *\nDisallow: /\n")
-(PUBLIC / "404.html").write_text(f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found — Social Luxe</title><meta name="robots" content="noindex"><link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head><body>{header()}<main id="main" class="shell section"><p class="eyebrow">404 / Page not found</p><h1 class="section-title" style="margin:25px 0">Let’s get you<br>back to Social Luxe.</h1>{button("Back to the homepage", "/")}</main>{footer()}</body></html>''')
-print("Built 6 pages and 404 in public/")
+def write_page(path,title,description,content,active='',body_class=''):
+    folder=PUBLIC/path;folder.mkdir(parents=True,exist_ok=True)
+    data=json.dumps(PROJECTS,ensure_ascii=False).replace('<','\\u003c')
+    markup=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title><meta name="description" content="{description}"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#f7f5f2"><meta property="og:title" content="{title}"><meta property="og:description" content="{description}"><meta property="og:type" content="website"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="/assets/fonts/inter-tight.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script>{'<script src="/material-scene.js" defer></script>' if path=='' else ''}</head><body class="{body_class}">{header(active)}<main id="main">{content}</main>{footer()}{modal()}<script id="projects-data" type="application/json">{data}</script></body></html>'''
+    (folder/'index.html').write_text(markup)
+write_page('','Social Luxe — Bali & Beyond','Influencer partnerships and private experiences. Social Luxe is based in Bali and working internationally.',HOME,body_class='home-page')
+write_page('work','Selected Work — Social Luxe','Explore five collaborations and private experiences from Social Luxe and Luxe Concierge.',WORK,'work')
+write_page('marketing','Marketing & Partnerships — Social Luxe','Creator partnerships, brand experiences and hospitality collaborations with Social Luxe in Bali.',MARKETING,'marketing')
+write_page('concierge','Luxe Concierge by Social Luxe','Private hospitality, reservations and personal requests in Bali and beyond.',CONCIERGE,'concierge','concierge-page')
+write_page('the-house','The House — Social Luxe','Meet Social Luxe, founded by Grace Kelly. Based in Bali, working internationally.',HOUSE,'house')
+write_page('enquire','Make an Enquiry — Social Luxe','Discuss a brand collaboration or a private booking with Social Luxe.',(ROOT/'templates/enquire.html').read_text())
+write_page('privacy','Privacy & Enquiries — Social Luxe','How information and enquiries are handled on this website.',(ROOT/'templates/privacy.html').read_text())
+(PUBLIC/'robots.txt').write_text('User-agent: *\nDisallow: /\n')
+(PUBLIC/'404.html').write_text(f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found — Social Luxe</title><meta name="robots" content="noindex"><link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head><body>{header()}<main class="shell section" id="main"><p class="eyebrow">404 / Page not found</p><h1 class="section-title" style="margin:30px 0">Let’s get you back<br>to Social Luxe.</h1>{button('Back to the homepage','/')}</main>{footer()}</body></html>''')
+print('Built 7 pages and 404 in public/')

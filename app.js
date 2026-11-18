@@ -24,7 +24,7 @@
       if (event.key === 'Escape' && !menu.hidden) { closeMenu(); menuButton.focus(); }
     });
     menu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
-    window.matchMedia('(min-width: 761px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+    window.matchMedia('(min-width: 801px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
   }
   const updateHeader = () => { if (header) header.classList.toggle('scrolled', window.scrollY > 20); };
   updateHeader();
@@ -38,6 +38,114 @@
     }, { threshold: 0.08, rootMargin: '0px 0px 25px 0px' });
     document.querySelectorAll('.reveal').forEach(element => observer.observe(element));
   }
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const motionToggle = document.getElementById('motion-toggle');
+  if (motionToggle) {
+    let motionPaused = reducedMotion.matches;
+    const setMotion = () => {
+      document.body.classList.toggle('motion-paused', motionPaused);
+      motionToggle.setAttribute('aria-pressed', String(motionPaused));
+      motionToggle.innerHTML = motionPaused ? '<span aria-hidden="true">▷</span> Resume motion' : '<span aria-hidden="true">Ⅱ</span> Pause motion';
+      window.dispatchEvent(new CustomEvent('sl-motion-change', { detail: { paused: motionPaused } }));
+    };
+    motionToggle.addEventListener('click', () => { motionPaused = !motionPaused; setMotion(); });
+    reducedMotion.addEventListener('change', () => { motionPaused = reducedMotion.matches; setMotion(); });
+    setMotion();
+  }
+
+  document.querySelectorAll('[data-gallery]').forEach(gallery => {
+    const rail = gallery.querySelector('.project-rail');
+    const prev = gallery.querySelector('.gallery-prev');
+    const next = gallery.querySelector('.gallery-next');
+    const updateControls = () => {
+      if (prev) prev.disabled = rail.scrollLeft < 5;
+      if (next) next.disabled = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 5;
+    };
+    const scrollGallery = direction => {
+      const card = [...rail.querySelectorAll('.project-card')].find(card => !card.hidden);
+      rail.scrollBy({ left: direction * ((card?.getBoundingClientRect().width || 300) + 22), behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+    };
+    prev?.addEventListener('click', () => scrollGallery(-1));
+    next?.addEventListener('click', () => scrollGallery(1));
+    rail.addEventListener('scroll', updateControls, { passive: true });
+    rail.addEventListener('keydown', event => {
+      if (event.target !== rail) return;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); scrollGallery(event.key === 'ArrowRight' ? 1 : -1); }
+    });
+    gallery.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
+      gallery.querySelectorAll('[data-filter]').forEach(item => { const active = item === button; item.classList.toggle('active', active); item.setAttribute('aria-pressed', String(active)); });
+      let count = 0;
+      rail.querySelectorAll('.project-card').forEach(card => { card.hidden = button.dataset.filter !== 'all' && button.dataset.filter !== card.dataset.category; if (!card.hidden) count++; });
+      rail.scrollTo({ left: 0, behavior: 'instant' });
+      const status = gallery.querySelector('.gallery-status');
+      if (status) status.textContent = count + ' projects';
+      updateControls();
+    }));
+    new ResizeObserver(updateControls).observe(rail);
+    updateControls();
+  });
+
+  const projectData = document.getElementById('projects-data');
+  const projectDialog = document.getElementById('project-dialog');
+  if (projectData && projectDialog && typeof projectDialog.showModal === 'function') {
+    const projects = JSON.parse(projectData.textContent);
+    let currentProject = null;
+    let photoIndex = 0;
+    let opener = null;
+    const photo = document.getElementById('dialog-photo');
+    const showPhoto = () => {
+      photo.src = '/assets/projects/' + currentProject.photos[photoIndex] + '.jpg';
+      photo.alt = currentProject.credit + ' — photo ' + (photoIndex + 1);
+      document.getElementById('photo-count').textContent = (photoIndex + 1) + ' / ' + currentProject.photos.length;
+      document.querySelector('.dialog-photo-controls').hidden = currentProject.photos.length < 2;
+    };
+    const openProject = (id, trigger, changeUrl = true) => {
+      const project = projects.find(item => item.id === id);
+      if (!project) return;
+      opener = trigger || document.activeElement;
+      currentProject = project; photoIndex = 0;
+      document.getElementById('project-title').textContent = project.title;
+      document.getElementById('project-category').textContent = project.categoryLabel;
+      document.getElementById('project-description').textContent = project.description;
+      document.getElementById('project-place').textContent = project.place;
+      document.getElementById('project-date').textContent = project.date;
+      document.getElementById('project-credit').textContent = project.credit;
+      document.getElementById('project-source').href = project.source;
+      const photoSource = document.getElementById('project-photo-source');
+      photoSource.hidden = !project.photoSource;
+      if (project.photoSource) photoSource.href = project.photoSource;
+      const logo = document.getElementById('dialog-logo');
+      logo.replaceChildren();
+      if (project.logo) { const img = document.createElement('img'); img.src = '/assets/logos/' + project.logo; img.alt = project.partner; logo.append(img); }
+      showPhoto();
+      if (changeUrl) history.pushState({ project: id }, '', '#' + id);
+      if (!projectDialog.open) projectDialog.showModal();
+      projectDialog.scrollTop = 0;
+      document.body.classList.add('dialog-open');
+      projectDialog.querySelector('.dialog-close').focus({ preventScroll: true });
+    };
+    document.querySelectorAll('[data-project]').forEach(link => link.addEventListener('click', event => {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault(); openProject(link.dataset.project, link);
+    }));
+    document.getElementById('photo-prev').addEventListener('click', () => { photoIndex = (photoIndex - 1 + currentProject.photos.length) % currentProject.photos.length; showPhoto(); });
+    document.getElementById('photo-next').addEventListener('click', () => { photoIndex = (photoIndex + 1) % currentProject.photos.length; showPhoto(); });
+    projectDialog.querySelector('.dialog-close').addEventListener('click', () => projectDialog.close());
+    projectDialog.addEventListener('click', event => { if (event.target === projectDialog) { const rect = projectDialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) projectDialog.close(); } });
+    projectDialog.addEventListener('close', () => {
+      document.body.classList.remove('dialog-open');
+      if (currentProject && location.hash === '#' + currentProject.id) history.replaceState(null, '', location.pathname + location.search);
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
+    });
+    const readHash = () => {
+      const id = location.hash.slice(1);
+      if (projects.some(project => project.id === id)) openProject(id, null, false);
+      else if (projectDialog.open) projectDialog.close();
+    };
+    window.addEventListener('hashchange', readHash);
+    readHash();
+  }
+
   const form = document.getElementById('enquiry-form');
   if (!form) return;
   const draftPanel = document.getElementById('draft-panel');

@@ -16,7 +16,7 @@ The current public website loads **Inter Tight**, not Anton.
 Source: https://socialluxe.com.au/assets/styles-Bvm7FybQ.css and homepage HTML.
 The H1 is Inter Tight 700 with -0.03em tracking; navigation and body use the same family. The SL mark is a PNG, so its source font cannot be verified from CSS.
 
-This design intentionally uses **Anton** for headings, **Inter Tight** for body and wordmark, and **Allura** for calligraphic accents. This is a proposed system, not a claim that the current brand already uses Anton.
+The revised design uses **Inter Tight** for headings, body and wordmarks, and **Allura** for the “by” signature and occasional calligraphic accents. Anton is no longer loaded or used.
 Fonts obtained through the official Google Fonts CSS API: https://developers.google.com/fonts/docs/css2
 Font licences are stored with the fonts.
 
@@ -40,8 +40,8 @@ Additional leads for client validation, not used as a client-logo wall:
 
 ## Imagery
 
-marketing.jpg, concierge.jpg and detail.jpg are generated with the integrated image-generation tool for this project's art direction. Anonymous people and fictional venues, no logos. Not client work. Replace with approved photography before launch.
+The live redesign uses nine photographs from the five verified Instagram collaborations, plus five official partner logos. The source posts and logo provenance are documented in instagram-research-v2.md. The old generated marketing.jpg, concierge.jpg and detail.jpg remain in source history but are no longer used by any page. The chrome sculpture is a decorative native WebGL asset, not client work.
 
 ## Concierge architecture
 
-The dedicated /concierge/ section has its own dark entrance, calligraphic name and route-specific enquiry. A future subdomain can be mapped if the activity needs separate navigation, content operations or systems. No domain is configured now.
+The dedicated /concierge/ section has its own dark entrance, Inter Tight name, calligraphic “by” signature and route-specific enquiry. A future subdomain can be mapped if the activity needs separate navigation, content operations or systems. No domain is configured now.

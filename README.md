@@ -7,11 +7,13 @@ Design-first website for Social Luxe and **Luxe Concierge by SL**.
 - Warm ivory, ink black and raspberry accent.
 - Inter Tight headings, body and wordmark; Allura calligraphy.
 - Responsive desktop/mobile layouts, accessible mobile navigation, native FAQ disclosures, reduced-motion support, scroll reveals and photo hover effects.
-- Dedicated /marketing/ and /concierge/ pages plus /the-house/, /enquire/ and /privacy/.
+- Dedicated /work/, /marketing/ and /concierge/ pages plus /the-house/, /enquire/ and /privacy/.
+- Five verified projects with Instagram photography and official logos, filters, keyboard-accessible carousels and native project dialogs.
+- Native WebGL chrome sculpture, pointer response, pause control and reduced-motion support; no third-party runtime.
 
 ## Edit and preview
 
-The site is static and has no npm dependencies or backend. Edit build.py, styles.css and app.js; run:
+The site is static and has no npm dependencies or backend. Edit build.py, projects.json, templates/, styles.css, app.js and material-scene.js; run:
 
     python3 build.py
     python3 -m http.server 4173 --directory public
@@ -26,7 +28,9 @@ The form prepares an email addressed to the publicly listed hello@socialluxe.com
 
 This is an aesthetic development version.
 
-- The three photographs are AI-generated illustrative art direction, not actual Social Luxe clients, venues or campaigns.
+- The live website uses nine photographs from five verified Instagram collaborations and five logos downloaded from official brand/venue websites. Source posts and provenance are recorded in docs/instagram-research-v2.md.
+- Projects are an editorial selection, not a performance ranking: public Instagram metrics are incomplete and not comparable.
+- The chrome sculpture is a decorative 3D design element; old generated photographs are no longer used.
 - Archive links point to public primary-source posts with contextual descriptions. No invented results or fake testimonials.
 - Service descriptions, budgets, brand typography, imagery and final business policies need client review before a branded launch.
 - Search indexing is disabled in robots.txt, page metadata and Vercel headers while the site is in development.
